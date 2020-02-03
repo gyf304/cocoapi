@@ -1,12 +1,8 @@
-from setuptools import setup, Extension
+from setuptools import dist, setup, Extension
 
-INCLUDE_DIRS = ['../common']
+dist.Distribution().fetch_build_eggs(['Cython>=0.27.3', 'numpy>=1.18.1'])
 
-try:
-    import numpy as np
-    INCLUDE_DIRS.insert(0, np.get_include())
-except ImportError:
-    pass
+import numpy as np
 
 # To compile and install locally run "python setup.py build_ext --inplace"
 # To install library to Python site-packages run "python setup.py build_ext install"
@@ -15,7 +11,7 @@ ext_modules = [
     Extension(
         'pycocotools._mask',
         sources=['../common/maskApi.c', 'pycocotools/_mask.pyx'],
-        include_dirs = INCLUDE_DIRS,
+        include_dirs=[np.get_include(), '../common'],
         extra_compile_args=['-std=c99'],
     )
 ]
@@ -26,7 +22,7 @@ setup(
     package_dir = {'pycocotools': 'pycocotools'},
     install_requires=[
         'setuptools>=18.0',
-        'cython>=0.27.3',
+        'Cython>=0.27.3',
         'matplotlib>=2.1.0',
         'numpy>=1.18.1',
     ],
